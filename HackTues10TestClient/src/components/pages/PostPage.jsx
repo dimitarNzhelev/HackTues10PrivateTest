@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Form, Image, Button } from "react-bootstrap";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import "./post.css";
 import CommentPopup from "../CommentPopUp";
 const PostPage = () => {
   const { postId } = useParams();
@@ -103,7 +104,6 @@ const PostPage = () => {
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.totalLikes);
         setTotalLikes(response.data.totalLikes);
       })
       .catch((err) => {
@@ -156,7 +156,6 @@ const PostPage = () => {
   }
 
   const handleSaveComment = (commentText) => {
-    console.log(commentText);
     addComment(commentText);
   };
 
@@ -174,7 +173,6 @@ const PostPage = () => {
               { withCredentials: true }
             )
             .then((res) => {
-              console.log(res.data);
               setComments(res.data.comments);
               setTotalComments(res.data.totalComments);
             })
@@ -244,6 +242,7 @@ const PostPage = () => {
       )
       .then((res) => {
         if (res.status === 200) {
+          alert(savedState ? "unsaved" : "saved");
           setSavedState(!savedState);
         }
       })
@@ -254,8 +253,6 @@ const PostPage = () => {
     navigate("/dashboard/post/update/" + id);
   }
 
-  console.log(user);
-  console.log(author);
   return post ? (
     <div style={{ height: "100%" }}>
       <Navbar
@@ -290,14 +287,19 @@ const PostPage = () => {
       </Navbar>
 
       <div
-        className="content bg-dark row"
+        className="bg-dark split"
         style={{
           padding: "2%",
         }}>
-        <div className="col-lg-6 col-md-6 col-sm-12">
+        <div className="col-lg-6 col-md-6 col-sm-12 bg-dark">
           <h1 style={{ color: "white" }}>{post.caption}</h1>
-          <div className="container">
-            <div style={{ marginLeft: "10%", marginBottom: "50px" }}>
+          <div className="container bg-dark">
+            <div
+              style={{
+                alignSelf: "center",
+                marginBottom: "50px",
+              }}
+              className="bg-dark">
               <p style={{ color: "white" }}>Description:</p>
               <p style={{ color: "white" }}>{post.description}</p>
               <p style={{ color: "white" }} id="total-likes">
@@ -308,6 +310,9 @@ const PostPage = () => {
               </p>
               <p style={{ color: "white" }}>
                 Liked: {likedState ? "yep" : "nope"}
+              </p>
+              <p style={{ color: "white" }}>
+                Saved: {savedState ? "yep" : "nope"}
               </p>
               <p style={{ color: "white" }}>
                 Posted by: {author && author.name}
@@ -370,12 +375,14 @@ const PostPage = () => {
             </div>
           </div>
         </div>
-        <div className="col-lg-6 col-md-6 col-sm-12">
+        <div
+          className="col-lg-6 col-md-6 col-sm-12 bg-dark imageContainer"
+          style={{ width: "100%", marginBottom: "2%" }}>
           <Image
-            className="post-image"
+            className="post-image "
             src={post.imageUrl}
             alt="Post"
-            style={{ borderRadius: 5, maxWidth: "100%" }}
+            style={{ borderRadius: 10, maxWidth: "100%" }}
           />
         </div>
       </div>
@@ -386,6 +393,7 @@ const PostPage = () => {
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "space-between",
+            width: "100%",
           }}>
           {comments.map((comment) => (
             <div

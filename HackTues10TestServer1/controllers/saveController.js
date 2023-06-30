@@ -44,12 +44,13 @@ async function getSavedPostsByUserId(userid) {
   }
 }
 
-async function checkSavedStatus(userid, postid) {
+async function checkSavedStatus(postid, userid) {
   try {
     const result = await pool.query(
       "SELECT * FROM saved_posts WHERE user_id = $1 AND post_id = $2",
       [userid, postid]
     );
+
     if (result.rows.length > 0) {
       return true;
     } else {

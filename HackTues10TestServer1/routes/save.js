@@ -12,7 +12,7 @@ const bodyParser = require("body-parser");
 
 router.get("/:id/status", async (req, res) => {
   const postId = parseInt(req.params.id);
-  const userId = req.userId;
+  const userId = req.session.user.id;
   try {
     const savedStatus = await checkSavedStatus(postId, userId);
     res.status(200).json({ savedStatus });
@@ -25,7 +25,7 @@ router.get("/:id/status", async (req, res) => {
 router.post("/:id", bodyParser.json(), async (req, res) => {
   const { userid, postid } = req.body;
   try {
-    if (await checkSavedStatus(userid, postid)) {
+    if (await checkSavedStatus(postid, userid)) {
       await unsavePost(userid, postid);
       res.status(200).json({ message: "Post unsaved successfully." });
     } else {

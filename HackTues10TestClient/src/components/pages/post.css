@@ -1,0 +1,23 @@
+@media (min-width: 768px) {
+    .split {
+        display: flex;
+        justify-content: space-between;
+        padding: 2%;
+    }
+    .imageContainer {
+        width: 50%;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .split {
+        padding: 2%;
+    }
+    .imageContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}
