@@ -1,0 +1,6 @@
+[submodule "HackTues10TestClient"]
+	path = HackTues10TestClient
+	url = https://github.com/dimitarNzhelev/HackTues10TestClient
+[submodule "HackTues10TestServer1"]
+	path = HackTues10TestServer1
+	url = https://github.com/dimitarNzhelev/HackTues10TestServer1
