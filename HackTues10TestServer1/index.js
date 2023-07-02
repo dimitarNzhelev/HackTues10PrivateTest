@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const flash = require("express-flash");
 const cors = require("cors");
 const homeRouter = require("./routes/home");
 const uploadRouter = require("./routes/upload");
@@ -11,6 +10,7 @@ const commentsRouter = require("./routes/comments");
 const authRoutes = require("./routes/auth.js");
 const cookieParser = require("cookie-parser");
 const saveRouter = require("./routes/save");
+const flash = require("express-flash");
 
 const PORT = 8080;
 
@@ -34,7 +34,7 @@ app.use(
 );
 
 app.enable("trust proxy");
-
+//Development purposes
 app.use(
   cors({
     origin: allowedOrigin,

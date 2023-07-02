@@ -5,8 +5,6 @@ const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const sharp = require("sharp");
 const dotenv = require("dotenv");
 const { getUserById } = require("./userController");
-const fs = require("fs");
-const heicConvert = require("heic-convert");
 
 dotenv.config();
 const bucketName = process.env.BUCKET_NAME;
@@ -58,10 +56,9 @@ async function uploadPost(req) {
         fileBuffer = req.file.buffer;
       } else {
         fileBuffer = await sharp(req.file.buffer)
-          .resize({ width: 400, height: 400, fit: "contain" })
+          .resize({ width: 1920, height: 1000, fit: "contain" })
           .toBuffer();
       }
-
       const fileName = await generateFileName();
       const command = new PutObjectCommand({
         Bucket: bucketName,

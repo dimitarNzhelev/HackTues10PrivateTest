@@ -1,24 +1,26 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Container, Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
+import { CircularProgress, Box, CardActionArea } from "@mui/material";
+import "./card.css";
+import "./background.css";
 
 const MyPosts = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const handleLogout = () => {
     axios
       .get("https://lobster-app-2-2vuam.ondigitalocean.app/auth/logout", {
         withCredentials: true,
       })
       .then((res) => {
-        setUser();
         navigate("/auth/login");
       });
   };
@@ -27,6 +29,7 @@ const MyPosts = () => {
 
   useEffect(() => {
     let isMounted = true;
+    setLoading(true);
 
     axios
       .get("https://lobster-app-2-2vuam.ondigitalocean.app/dashboard/myposts", {
@@ -36,15 +39,15 @@ const MyPosts = () => {
         if (isMounted) {
           if (res.data.posts) {
             setPosts(res.data.posts);
-          } else {
-            navigate("/auth/login");
           }
         }
+        setLoading(false);
       })
       .catch((err) => {
         if (isMounted) {
           console.error(err);
         }
+        setLoading(false);
       });
 
     return () => {
@@ -53,9 +56,9 @@ const MyPosts = () => {
   }, []);
 
   return (
-    <div style={{ height: "100%" }}>
+    <div className="gradient-background">
       <Navbar
-        bg="secondary"
+        bg="dark"
         variant="dark"
         expand="lg"
         style={{
@@ -85,40 +88,41 @@ const MyPosts = () => {
         </Navbar.Collapse>
       </Navbar>
       <div
+        className="only-gradient"
         style={{
           display: "flex",
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "space-around",
           alignItems: "start",
-        }}
-        className="bg-dark">
-        {posts &&
+        }}>
+        {loading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="80vh">
+            <CircularProgress size={100} />
+          </Box>
+        ) : posts && posts.length > 0 ? (
           posts.map((post) => {
             return (
-              <Card
-                sx={{
-                  maxWidth: 345,
-                  margin: "1%",
-                }}
-                key={post.id}>
+              <Card className="cardHover" key={post.id}>
                 <CardActionArea
                   onClick={() =>
                     navigate("/dashboard/post/" + post.id, { state: { post } })
                   }>
                   <CardMedia
                     component="img"
-                    height="140"
+                    className="image"
                     image={post.imageUrl}
                     alt="green iguana"
                   />
-                  <CardContent>
+                  <CardContent className="card-content">
                     <Typography gutterBottom variant="h5" component="div">
                       {post.caption}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {post.description}
-                    </Typography>
+
                     <Typography gutterBottom variant="h6" component="div">
                       Author: {post.author}
                     </Typography>
@@ -126,7 +130,10 @@ const MyPosts = () => {
                 </CardActionArea>
               </Card>
             );
-          })}
+          })
+        ) : (
+          <h1 style={{ color: "#fff", padding: 20 }}>There are no posts</h1>
+        )}
       </div>
     </div>
   );

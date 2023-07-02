@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Container, Form, Button, Alert } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const LoginComponent = ({ errors, messages }) => {
+const LoginComponent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

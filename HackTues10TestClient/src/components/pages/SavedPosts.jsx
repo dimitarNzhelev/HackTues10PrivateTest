@@ -6,12 +6,15 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
+import { CardActionArea, CircularProgress, Box } from "@mui/material";
+import "./card.css";
+import "./background.css";
 
 const SavedPosts = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleLogout = () => {
     axios
@@ -27,7 +30,7 @@ const SavedPosts = () => {
 
   useEffect(() => {
     let isMounted = true;
-
+    setLoading(true);
     axios
       .get("https://lobster-app-2-2vuam.ondigitalocean.app/dashboard/", {
         withCredentials: true,
@@ -35,6 +38,7 @@ const SavedPosts = () => {
       .then((res) => {
         if (isMounted) {
           if (res.data.user === null) {
+            setLoading(true);
             navigate("/auth/login");
           }
 
@@ -47,9 +51,11 @@ const SavedPosts = () => {
               )
               .then((res) => {
                 setPosts(res.data.posts);
+                setLoading(false);
               })
               .catch((err) => {
                 console.error(err);
+                setLoading(false);
               });
           }
         }
@@ -58,6 +64,7 @@ const SavedPosts = () => {
         if (isMounted) {
           console.log(err);
         }
+        setLoading(false);
       });
 
     return () => {
@@ -66,9 +73,9 @@ const SavedPosts = () => {
   }, []);
 
   return (
-    <div style={{ height: "100%" }}>
+    <div className="gradient-background">
       <Navbar
-        bg="secondary"
+        bg="dark"
         variant="dark"
         expand="lg"
         style={{
@@ -98,40 +105,41 @@ const SavedPosts = () => {
         </Navbar.Collapse>
       </Navbar>
       <div
+        className="only-gradient"
         style={{
           display: "flex",
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "space-around",
           alignItems: "start",
-        }}
-        className="bg-dark">
-        {posts &&
+        }}>
+        {loading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="80vh">
+            <CircularProgress size={100} />
+          </Box>
+        ) : posts && posts.length > 0 ? (
           posts.map((post) => {
             return (
-              <Card
-                sx={{
-                  maxWidth: 345,
-                  margin: "1%",
-                }}
-                key={post.id}>
+              <Card className="cardHover" key={post.id}>
                 <CardActionArea
                   onClick={() =>
                     navigate("/dashboard/post/" + post.id, { state: { post } })
                   }>
                   <CardMedia
                     component="img"
-                    height="140"
+                    className="image"
                     image={post.imageUrl}
                     alt="green iguana"
                   />
-                  <CardContent>
+                  <CardContent className="card-content">
                     <Typography gutterBottom variant="h5" component="div">
                       {post.caption}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {post.description}
-                    </Typography>
+
                     <Typography gutterBottom variant="h6" component="div">
                       Author: {post.author}
                     </Typography>
@@ -139,7 +147,10 @@ const SavedPosts = () => {
                 </CardActionArea>
               </Card>
             );
-          })}
+          })
+        ) : (
+          <h1 style={{ color: "#fff", padding: 20 }}>There are no posts</h1>
+        )}
       </div>
     </div>
   );

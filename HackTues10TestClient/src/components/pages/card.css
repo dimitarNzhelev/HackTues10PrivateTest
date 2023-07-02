@@ -1,10 +1,36 @@
 .cardHover {
     transform: scale(1);
     transition: transform 0.4s ease-in-out;
+    background-color: #242944;
 }
 
 .cardHover:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     transform: scale(1.07);
     transition: transform 0.4s ease-in-out;
+}
+
+.card-content {
+    background-color: #242944;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+.image {
+    height: 140px;   
+}
+.cardHover {
+    width: 300px;
+    margin: 2%
+}
+}
+
+@media (min-width: 768px) {
+.image {
+    height: 210px;   
+}
+.cardHover {
+    width: 450px;
+    margin: 1%
+}
 }

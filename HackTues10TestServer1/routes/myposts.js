@@ -51,16 +51,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id/update", async (req, res) => {
-  const id = req.params.id;
-  const post = await pool.query(`SELECT * FROM posts WHERE id = $1`, [id]);
-  if (!post) {
-    res.status(404).send("Post not found");
-    return;
-  }
-  res.render("updatePost", { post: post.rows[0] });
-});
-
 router.get("/:id/share", async (req, res) => {
   const id = req.params.id;
   const post = await pool.query(`SELECT * FROM posts WHERE id = $1`, [id]);
@@ -69,6 +59,21 @@ router.get("/:id/share", async (req, res) => {
     return;
   }
   res.send((await S3Service.addImageUrls(post.rows))[0].imageUrl);
+});
+
+router.get("/:id/update", async (req, res) => {
+  const id = req.params.id;
+  const user = req.session.user;
+  const post = await pool.query(
+    `SELECT * FROM posts WHERE id = $1 AND user_id = $2`,
+    [id, user.id]
+  );
+
+  if (!post) {
+    res.status(404).send("Post not found");
+    return;
+  }
+  res.json(post.rows[0]);
 });
 
 router.post("/:id/update", upload.single("photo"), async (req, res) => {
@@ -82,12 +87,12 @@ router.post("/:id/update", upload.single("photo"), async (req, res) => {
       res.status(404).send("Post not found");
       return;
     }
-
-    await pool.query("UPDATE posts SET visibility = $1 WHERE id = $2", [
-      visibility,
-      id,
-    ]);
-
+    if (post.rows[0].visibility != visibility) {
+      await pool.query("UPDATE posts SET visibility = $1 WHERE id = $2", [
+        visibility,
+        id,
+      ]);
+    }
     if (req.file) {
       const prevImageKey = post.rows[0].imagename;
       const deleteParams = {
@@ -98,10 +103,11 @@ router.post("/:id/update", upload.single("photo"), async (req, res) => {
       await s3.send(deleteCommand);
 
       const fileBuffer = await sharp(req.file.buffer)
-        .resize({ width: 300, height: 300, fit: "contain" })
+        .resize({ width: 1920, height: 1080, fit: "contain" })
         .toBuffer();
       const newImageKey = await generateFileName();
 
+      // const fileBuffer = req.file.buffer;
       const uploadParams = {
         Bucket: bucketName,
         Key: newImageKey,

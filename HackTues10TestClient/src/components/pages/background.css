@@ -1,0 +1,33 @@
+.gradient-background {
+    height: 100%;
+/* background: linear-gradient(0deg, #D1D4E5, #6774AE);; */
+    background-color: #9FA6C4 ;
+}
+
+.only-gradient {
+    /* background: linear-gradient(0deg,#989EBA, #D1D4E5, #9FA6C4, #6774AE, #B6BBD3);; */
+    background-color: #9FA6C4 ;
+
+}
+
+.content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 30%;
+  }
+  
+  @media (max-width: 1024px) {
+    .content {
+      width: 80%;
+      height: 70%;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .content {
+      width: 30%;
+    }
+  }
