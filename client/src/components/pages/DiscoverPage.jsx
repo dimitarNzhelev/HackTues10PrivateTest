@@ -66,7 +66,7 @@ const Discover = () => {
   }, []);
 
   return (
-    <div className="gradient-background">
+    <div className="gradient-background" style={{ overflow: "auto" }}>
       <Navbar
         bg="dark"
         variant="dark"

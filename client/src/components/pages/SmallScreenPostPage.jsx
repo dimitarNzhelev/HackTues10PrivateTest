@@ -287,21 +287,15 @@ const SmallScreenPostPage = () => {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-
       <div
-        className="gradient-background split"
+        className="gradient-background"
         style={{
           padding: "2%",
         }}>
         <div className="col-lg-6 col-md-6 col-sm-12  ">
           <h1 style={{ color: "white" }}>{post.caption}</h1>
-          <div className="container">
-            <div
-              style={{
-                alignSelf: "center",
-                marginBottom: "50px",
-              }}
-              className="gradient-background">
+          <div className="container gradient-background">
+            <div className="textContainer" style={{ padding: 20, margin: 20 }}>
               <p style={{ color: "white" }}>Description:</p>
               <p style={{ color: "white" }}>{post.description}</p>
               <p style={{ color: "white" }} id="total-likes">
@@ -384,7 +378,7 @@ const SmallScreenPostPage = () => {
           />
         </div>
       </div>
-      {comments && comments.length > 0 && (
+      {comments && comments.length > 0 ? (
         <div
           className="gradient-background"
           style={{
@@ -454,6 +448,17 @@ const SmallScreenPostPage = () => {
               )}
             </div>
           ))}
+        </div>
+      ) : (
+        <div
+          style={{
+            className: "gradient-background",
+            alignSelf: "center",
+            justifyContent: "center",
+            width: "100%",
+            padding: "5%",
+          }}>
+          <h1 style={{ color: "white", margin: 30 }}>No comments yet</h1>
         </div>
       )}
     </div>

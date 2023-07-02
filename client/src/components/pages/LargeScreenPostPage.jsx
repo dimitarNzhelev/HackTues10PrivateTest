@@ -51,10 +51,11 @@ const LargeScreenPostPage = () => {
       .then((res) => {
         if (isMounted) {
           if (res.data.user === null) {
-            if (post.visibility === "private") {
-              setLoading(false);
-              navigate("/auth/login");
-            }
+            navigate("/auth/login");
+          }
+          if (post.visibility === "private") {
+            setLoading(false);
+            navigate("/auth/login");
           }
           setUser(res.data.user);
           axios
@@ -267,7 +268,7 @@ const LargeScreenPostPage = () => {
   }
 
   return post ? (
-    <div className="gradient-background" style={{ overflow: "hidden" }}>
+    <div className="gradient-background">
       <Navbar
         bg="dark"
         variant="dark"
@@ -307,7 +308,7 @@ const LargeScreenPostPage = () => {
           <CircularProgress size={100} />
         </Box>
       ) : (
-        <div className="split">
+        <div className="split" style={{ margin: 30 }}>
           <div className="col-lg-6 col-md-6 col-sm-12 imageContainer">
             <h1 style={{ color: "white", padding: "2%" }}>{post.caption}</h1>
             <Image
@@ -323,14 +324,10 @@ const LargeScreenPostPage = () => {
             <div
               className="col-lg-6 col-md-6 col-sm-12"
               style={{ width: "100%" }}>
-              <div className="container">
-                <div
-                  style={{
-                    alignSelf: "fkex-start",
-                    margin: "2%",
-                    backgroundColor: "#6774AF",
-                    borderRadius: 20,
-                  }}>
+              <div
+                className="container textContainer"
+                style={{ marginTop: 20 }}>
+                <div>
                   <p style={{ color: "white" }}>Description:</p>
                   <p style={{ color: "white" }}>{post.description}</p>
                   <p style={{ color: "white" }} id="total-likes">
@@ -342,7 +339,6 @@ const LargeScreenPostPage = () => {
                   <p style={{ color: "white" }}>
                     Posted by: {author && author.name}
                   </p>
-                  <a href="/dashboard">Back to dashboard</a>
                   {user ? (
                     <>
                       <Button
@@ -384,37 +380,40 @@ const LargeScreenPostPage = () => {
                         onClick={() => save()}>
                         {savedState ? "Unsave" : "Save"}
                       </Button>
+                      <a href="/dashboard" style={{ color: "white" }}>
+                        Back to dashboard
+                      </a>
                     </>
                   ) : null}
-
-                  {author && user && author.id === user.id && (
-                    <>
-                      <Button
-                        className="comment-button"
-                        style={{ margin: "2%" }}
-                        onClick={() => updatePost(post.id)}>
-                        Update Post
-                      </Button>
-                      <Button
-                        className="comment-button"
-                        style={{ margin: "2%" }}
-                        onClick={() => deletePost()}>
-                        Delete Post
-                      </Button>
-                    </>
-                  )}
                 </div>
               </div>
+              {author && user && author.id === user.id && (
+                <>
+                  <Button
+                    className="comment-button"
+                    style={{ margin: "2%" }}
+                    onClick={() => updatePost(post.id)}>
+                    Update Post
+                  </Button>
+                  <Button
+                    className="comment-button"
+                    style={{ margin: "2%" }}
+                    onClick={() => deletePost()}>
+                    Delete Post
+                  </Button>
+                </>
+              )}
             </div>
           </div>
-          {comments && comments.length > 0 && (
+          {comments && comments.length > 0 ? (
             <div
               className="custom-scrollbar"
               style={{
                 height: size.height * 0.92,
+                alignSelf: "flex-end",
                 overflowY: "scroll",
                 overflowX: "hidden",
-                width: size.width * 0.5,
+                width: size.width * 0.45,
               }}>
               {comments.map((comment) => (
                 <div
@@ -477,6 +476,17 @@ const LargeScreenPostPage = () => {
                   )}
                 </div>
               ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                className: "only-gradient",
+                alignSelf: "center",
+                justifyContent: "center",
+                width: "40%",
+                padding: "5%",
+              }}>
+              <h1 style={{ color: "white", margin: 30 }}>No comments yet</h1>
             </div>
           )}
         </div>

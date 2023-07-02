@@ -202,7 +202,7 @@ const Update = () => {
               </Form.Group>
               <Form.Group>
                 <Form.Label>
-                  Upload an Image:(only if you want to update the image)
+                  Upload an Image (only if you want to update the image):
                 </Form.Label>
                 <Form.Control
                   type="file"
