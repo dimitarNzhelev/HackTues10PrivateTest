@@ -22,7 +22,7 @@
 <h3>Имаме express сървър, който играе ролята на CRUD REST API. Свързан е към PostgreSQL. Базата данни има одитни таблици за промени по коментарите и постовете. Всяка таблица има т. нар. relations.</h3>
 <image src="https://github.com/dimitarNzhelev/HackTues10PrivateTest/assets/80209250/a884a416-3ea1-46ee-955d-6f0efa993a5a" />
 <image src="https://github.com/dimitarNzhelev/HackTues10PrivateTest/assets/80209250/020c247b-aa50-4228-9a0b-1847785b876a" />
-<h4>В posts_audit виждаме, че за един update имаме 2 audit-a, защото първо се слага нова стойност от тип visibility и после променените полета.</h4>
+<h4>В posts_audit виждаме, че за един update имаме 2 audit-a, защото за всяка промяна се прави нов update. Взета е такава мярка, за да може потребителят да не трябва да въвежда всички данни наново.</h4>
 
 
 <h4>Tова са пътищата:</h4>
